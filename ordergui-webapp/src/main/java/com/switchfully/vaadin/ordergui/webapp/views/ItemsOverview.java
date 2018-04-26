@@ -13,16 +13,23 @@ import java.util.Collection;
 
 public class ItemsOverview extends CustomComponent implements View {
 
+    private Collection<Item> itemList;
+    private BeanItemContainer<Item> container;
+    private Grid itemsGrid;
+    private HorizontalLayout overviewLayout;
+
     public ItemsOverview(ItemResource itemResource) {
 
-        Collection<Item> itemList = itemResource.getItems();
-        BeanItemContainer<Item> container = new BeanItemContainer<Item>(Item.class, itemList);
-        Grid itemsGrid = new Grid(container);
+        itemList = itemResource.getItems();
+
+        container = new BeanItemContainer<Item>(Item.class, itemList);
+
+        itemsGrid = new Grid(container);
         itemsGrid.setColumns("name", "description", "price", "amountOfStock");
         itemsGrid.setContainerDataSource(container);
         itemsGrid.setSizeFull();
 
-        HorizontalLayout overviewLayout = new HorizontalLayout(itemsGrid);
+        overviewLayout = new HorizontalLayout(itemsGrid);
         overviewLayout.setSizeFull();
         setCompositionRoot(overviewLayout);
     }
