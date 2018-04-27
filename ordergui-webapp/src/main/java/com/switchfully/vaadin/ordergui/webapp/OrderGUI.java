@@ -5,6 +5,7 @@ import com.switchfully.vaadin.ordergui.webapp.views.ItemCreation;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemUpdate;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemsOverview;
 import com.vaadin.annotations.Theme;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -17,14 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderGUI extends UI {
 
     private String VIEW_ITEMS_HOME = "";
-    private String VIEW_ITEMS_VIEWITEMS = "viewItems";
+    private String VIEW_ITEMS_ITEMOVERVIEW = "itemOverview";
     private String VIEW_ITEMS_ITEMCREATION = "itemCreation";
     private String VIEW_ITEMS_ITEMUPDATE = "itemUpdate";
 
-    private Label title;
-    private Button viewItems;
-    private Button itemCreation;
-    private Button itemUpdate;
     private ItemResource itemResource;
     private HorizontalLayout menu;
     private HorizontalLayout viewContainer;
@@ -38,26 +35,35 @@ public class OrderGUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
 
-        title = new Label("Item Menu");
-        title.addStyleName(ValoTheme.MENU_TITLE);
-        title.setWidth("250px");
+        Button order = new Button("Örder");
+        order.addStyleName(ValoTheme.MENU_TITLE);
+        order.setWidth("250px");
+        order.addClickListener(event -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW));
+//        order.addContextClickListener(new ContextClickEvent.ContextClickListener() {
+//            @Override
+//            public void contextClick(ContextClickEvent event) {
+//                getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
+//            }
+//        });
+        MenuBar menubar = new MenuBar();
+        MenuBar.MenuItem items = menubar.addItem("items",null,null);
+        items.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
-        viewItems = new Button("View Items", e -> getNavigator().navigateTo("viewItems"));
-        viewItems.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        viewItems.setWidth("150px");
+        MenuBar.Command createCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
+        MenuBar.Command overviewCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW);
+        MenuBar.Command updateCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMUPDATE);
 
-        itemCreation = new Button("Create Item", e -> getNavigator().navigateTo("itemCreation"));
-        itemCreation.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        itemCreation.setWidth("150px");
 
-        itemUpdate = new Button("Update Item", e -> getNavigator().navigateTo("itemUpdate"));
-        itemUpdate.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        itemUpdate.setWidth("150px");
+        MenuBar.MenuItem create = items.addItem("Create", null, createCommand);
+        MenuBar.MenuItem overview = items.addItem("Overview", null, overviewCommand);
+        MenuBar.MenuItem update = items.addItem("Update", null, updateCommand);
 
-        menu = new HorizontalLayout(title, viewItems, itemCreation, itemUpdate);
-        menu.setExpandRatio(itemUpdate, 1.0f);
+
+
+
+        menu = new HorizontalLayout(order,menubar);
+        menu.setExpandRatio(menubar, 1.0f);
         menu.addStyleName(ValoTheme.MENU_ROOT);
-        menu.setHeight("41px");
         menu.setWidth("100%");
         menu.setSpacing(true);
 
@@ -72,7 +78,7 @@ public class OrderGUI extends UI {
 
         Navigator navigator = new Navigator(this, viewContainer);
         navigator.addView(VIEW_ITEMS_HOME, new ItemsOverview(itemResource));
-        navigator.addView(VIEW_ITEMS_VIEWITEMS, new ItemsOverview(itemResource));
+        navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource));
         navigator.addView(VIEW_ITEMS_ITEMCREATION, ItemCreation.class);
         navigator.addView(VIEW_ITEMS_ITEMUPDATE, ItemUpdate.class);
 
