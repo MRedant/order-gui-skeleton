@@ -69,11 +69,14 @@ public class OrderGUI extends UI {
         setContent(mainLayout);
 
         Navigator navigator = new Navigator(this, viewContainer);
-        navigator.addView(VIEW_ITEMS_HOME, new ItemsOverview(itemResource));
-        navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource));
+        navigator.addView(VIEW_ITEMS_HOME, new ItemsOverview(itemResource, this));
+        navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource, this));
         navigator.addView(VIEW_ITEMS_ITEMCREATION,new ItemCreation(itemResource));
-        navigator.addView(VIEW_ITEMS_ITEMUPDATE, ItemUpdate.class);
+//        navigator.addView(VIEW_ITEMS_ITEMUPDATE, ItemUpdate(item).class);
 
     }
 
+    public String getVIEW_ITEMS_ITEMUPDATE() {
+        return VIEW_ITEMS_ITEMUPDATE;
+    }
 }

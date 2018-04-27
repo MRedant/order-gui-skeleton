@@ -45,23 +45,29 @@ public class ItemCreation extends CustomComponent implements View {
         name.setWidth("35em");
         name.addValidator(new NullValidator("Can't be empty", false));
         name.setRequired(true);
+
         description.setInputPrompt("The item description");
         description.setWidth("35em");
         description.setHeight("10em");
         description.addValidator((new NullValidator("Can't be empty", false)));
         description.setRequired(true);
+
         price.setConverter(new StringToFloatConverter());
         price.setInputPrompt("0.00");
         price.setNullRepresentation("0.00");
         price.setRequired(true);
         price.addValidator(new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
-        amountOfStock.setInputPrompt("0");
         amountOfStock.setRequired(true);
+        amountOfStock.setValue("0");
+        amountOfStock.setInputPrompt("0");
+        amountOfStock.setNullRepresentation("0");
 
         createButton.setClickShortcut(KeyCode.ENTER);
         createButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
         createButton.addClickListener(e -> save());
+
+        cancelButton.addClickListener(e -> clearAllFields());
 
         HorizontalLayout priceAmount = new HorizontalLayout(price, amountOfStock);
         priceAmount.setSpacing(true);
@@ -70,6 +76,7 @@ public class ItemCreation extends CustomComponent implements View {
 
         viewContainer = new VerticalLayout(name, description, priceAmount, buttons);
         viewContainer.setSpacing(true);
+        clearAllFields();
         setCompositionRoot(viewContainer);
     }
 
@@ -80,6 +87,15 @@ public class ItemCreation extends CustomComponent implements View {
         } catch (FieldGroup.CommitException e) {
             e.printStackTrace();
         }
+        Notification.show("SAVED!", "The item was created succesfully",Notification.Type.HUMANIZED_MESSAGE);
+        clearAllFields();
+    }
+
+    private void clearAllFields(){
+        name.clear();
+        description.clear();
+        price.clear();
+        amountOfStock.clear();
     }
 
 
