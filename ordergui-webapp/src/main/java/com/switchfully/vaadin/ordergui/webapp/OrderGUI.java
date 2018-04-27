@@ -39,12 +39,7 @@ public class OrderGUI extends UI {
         order.addStyleName(ValoTheme.MENU_TITLE);
         order.setWidth("250px");
         order.addClickListener(event -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW));
-//        order.addContextClickListener(new ContextClickEvent.ContextClickListener() {
-//            @Override
-//            public void contextClick(ContextClickEvent event) {
-//                getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
-//            }
-//        });
+
         MenuBar menubar = new MenuBar();
         MenuBar.MenuItem items = menubar.addItem("items",null,null);
         items.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
@@ -57,9 +52,6 @@ public class OrderGUI extends UI {
         MenuBar.MenuItem create = items.addItem("Create", null, createCommand);
         MenuBar.MenuItem overview = items.addItem("Overview", null, overviewCommand);
         MenuBar.MenuItem update = items.addItem("Update", null, updateCommand);
-
-
-
 
         menu = new HorizontalLayout(order,menubar);
         menu.setExpandRatio(menubar, 1.0f);
@@ -79,7 +71,7 @@ public class OrderGUI extends UI {
         Navigator navigator = new Navigator(this, viewContainer);
         navigator.addView(VIEW_ITEMS_HOME, new ItemsOverview(itemResource));
         navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource));
-        navigator.addView(VIEW_ITEMS_ITEMCREATION, ItemCreation.class);
+        navigator.addView(VIEW_ITEMS_ITEMCREATION,new ItemCreation(itemResource));
         navigator.addView(VIEW_ITEMS_ITEMUPDATE, ItemUpdate.class);
 
     }

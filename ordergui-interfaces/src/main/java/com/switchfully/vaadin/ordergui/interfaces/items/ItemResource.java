@@ -11,16 +11,24 @@ import java.util.List;
 public class ItemResource {
 
     private RestTemplate restTemplate;
+    private static final String BACKENDURL = "http://localhost:9000/items";
+
 
     @Autowired
     public ItemResource(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    public ItemResource() {
+    }
+
     public List<Item> getItems() {
-        Item[] items = restTemplate.getForObject("http://localhost:9000/items", Item[].class);
+        Item[] items = restTemplate.getForObject(BACKENDURL, Item[].class);
         return Arrays.asList(items);
     }
 
 
+    public Item create(Item item) {
+        return restTemplate.postForObject(BACKENDURL,item,Item.class);
+    }
 }
