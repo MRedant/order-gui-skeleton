@@ -6,7 +6,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ItemResource {
@@ -33,8 +32,7 @@ public class ItemResource {
         return restTemplate.postForObject(BACKENDURL,item,Item.class);
     }
 
-    public void update(String itemId, Optional<Item> item) {
-        //todo finish
-        restTemplate.put(BACKENDURL+"/"+itemId, item);
+    public void update(Item item) {
+        restTemplate.put(BACKENDURL+"/"+item.getId(), item);
     }
 }

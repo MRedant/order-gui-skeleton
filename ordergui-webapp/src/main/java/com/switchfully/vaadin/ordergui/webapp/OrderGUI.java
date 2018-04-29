@@ -108,7 +108,7 @@ public class OrderGUI extends UI {
 
     public void setLogOutVisible(String member){
         logout.setVisible(true);
-        logout.setCaption("Log out " + member);
+        logout.setCaption("Log out '" + member+"'");
     }
 
     public String getVIEW_ITEMS_ITEMUPDATE() {

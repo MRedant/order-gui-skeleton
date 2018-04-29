@@ -84,7 +84,7 @@ public class ItemCreation extends CustomComponent implements View {
         } catch (FieldGroup.CommitException e) {
             e.printStackTrace();
         }
-        Notification.show("SAVED!", "The item was created successfully",Notification.Type.HUMANIZED_MESSAGE);
+        Notification.show("- SAVED -", "The item was created successfully",Notification.Type.HUMANIZED_MESSAGE);
         clearAllFields();
     }
 

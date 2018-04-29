@@ -4,6 +4,7 @@ import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.NullValidator;
@@ -12,8 +13,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.util.Optional;
 
 public class ItemUpdate extends CustomComponent implements View {
 
@@ -27,13 +26,15 @@ public class ItemUpdate extends CustomComponent implements View {
 
     private ItemResource itemResource;
     private String itemId = "";
-    private Optional<Item> item;
+    private Item item = new Item();
+
+    final BeanFieldGroup<Item> binder = new BeanFieldGroup<>(Item.class);
 
     public ItemUpdate(ItemResource itemResource, OrderGUI orderGUI) {
         this.itemResource = itemResource;
         this.orderGUI = orderGUI;
 
-//        BeanFieldGroup.bindFieldsUnbuffered(this.item,this);
+        BeanFieldGroup.bindFieldsUnbuffered(this.item, this);
 
         Label newItem = new Label("Update item");
         newItem.setStyleName(ValoTheme.LABEL_H1);
@@ -56,7 +57,6 @@ public class ItemUpdate extends CustomComponent implements View {
 
         amountOfStock.setRequired(true);
         amountOfStock.setInputPrompt("0");
-        amountOfStock.setNullRepresentation("0");
 
         updateButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         updateButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -76,20 +76,43 @@ public class ItemUpdate extends CustomComponent implements View {
     }
 
     private void update() {
-        itemResource.update(itemId, item);
+        updateItem();
+        try {
+            binder.commit();
+            itemResource.update(item);
+            orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
+        } catch (FieldGroup.CommitException e) {
+            e.printStackTrace();
+        }
+        Notification.show("- UPDATED -", "The item was successfully updated", Notification.Type.HUMANIZED_MESSAGE);
         orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
+    }
+
+    private void updateItem() {
+        item.setName(name.getValue());
+        item.setDescription(description.getValue());
+        item.setPrice(Float.valueOf(price.getValue()));
+        item.setAmountOfStock(Integer.valueOf(amountOfStock.getValue()));
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (event.getParameters() == null
                 || event.getParameters().isEmpty()) {
-            Notification.show("Error", "Something went wrong, no item identifier found.", Notification.Type.HUMANIZED_MESSAGE);
-            return;
-        } else
+            Notification.show("¯\\_(ツ)_/¯", "Something went wrong, no item identifier found.", Notification.Type.HUMANIZED_MESSAGE);
+        } else {
             itemId = event.getParameters();
             item = itemResource.getItems().stream()
-                    .filter(e-> e.getId().equals(itemId))
-                    .findFirst();
+                    .filter(e -> e.getId().equals(itemId))
+                    .findFirst().orElse(null);
+            populateItemFields();
+        }
+    }
+
+    private void populateItemFields() {
+        name.setValue(item.getName());
+        description.setValue(item.getDescription());
+        price.setValue(String.valueOf(item.getPrice()));
+        amountOfStock.setValue(String.valueOf(item.getAmountOfStock()));
     }
 }
