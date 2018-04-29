@@ -35,6 +35,7 @@ public class OrderGUI extends UI {
     private VerticalLayout mainLayout;
 
     private Button order;
+    private Button logout;
     private MenuBar menubar;
     private MenuBar.MenuItem items;
     private MenuBar.MenuItem create;
@@ -51,10 +52,10 @@ public class OrderGUI extends UI {
         createPageLayout();
 
         Navigator navigator = new Navigator(this, viewContainer);
-        navigator.addView(VIEW_ITEMS_HOME, new LandingPage());
+        navigator.addView(VIEW_ITEMS_HOME, new LandingPage(this));
         navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource, this));
         navigator.addView(VIEW_ITEMS_ITEMCREATION, new ItemCreation(itemResource));
-        navigator.addView(VIEW_ITEMS_ITEMUPDATE, new ItemUpdate());
+        navigator.addView(VIEW_ITEMS_ITEMUPDATE, new ItemUpdate(itemResource, this));
 
     }
 
@@ -87,14 +88,34 @@ public class OrderGUI extends UI {
         MenuBar.Command createCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
         create = items.addItem("Create", null, createCommand);
 
-        menu = new HorizontalLayout(order, menubar);
+        logout = new Button();
+        logout.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        logout.addClickListener(e -> logMeout(logout.getCaption()));
+        logout.setVisible(false);
+
+        menu = new HorizontalLayout(order, menubar, logout);
         menu.setExpandRatio(menubar, 1.0f);
         menu.addStyleName(ValoTheme.MENU_ROOT);
         menu.setWidth("100%");
         menu.setSpacing(true);
     }
 
+    private void logMeout(String logoutButtonCaption) {
+        //todo : do actual logging out
+        Notification.show("Logged Out", logoutButtonCaption + " successfully. \nThank you for using Örder !", Notification.Type.HUMANIZED_MESSAGE);
+        logout.setVisible(false);
+    }
+
+    public void setLogOutVisible(String member){
+        logout.setVisible(true);
+        logout.setCaption("Log out " + member);
+    }
+
     public String getVIEW_ITEMS_ITEMUPDATE() {
         return VIEW_ITEMS_ITEMUPDATE;
+    }
+
+    public String getVIEW_ITEMS_ITEMOVERVIEW() {
+        return VIEW_ITEMS_ITEMOVERVIEW;
     }
 }

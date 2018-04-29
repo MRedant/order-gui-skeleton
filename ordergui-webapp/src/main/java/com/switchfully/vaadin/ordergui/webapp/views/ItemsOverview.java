@@ -56,7 +56,7 @@ public class ItemsOverview extends CustomComponent implements View {
     }
 
     private void updateItem(Item item) {
-        orderGui.getNavigator().navigateTo(orderGui.getVIEW_ITEMS_ITEMUPDATE());
+        orderGui.getNavigator().navigateTo(orderGui.getVIEW_ITEMS_ITEMUPDATE()+"/"+item.getId());
     }
 
     @Override

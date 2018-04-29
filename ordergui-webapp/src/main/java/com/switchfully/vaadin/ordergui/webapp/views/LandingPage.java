@@ -1,5 +1,6 @@
 package com.switchfully.vaadin.ordergui.webapp.views;
 
+import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -15,8 +16,11 @@ public class LandingPage extends CustomComponent implements View {
     private final PasswordField passwordField;
     private final Panel loginPanel = new Panel("Login");
     private final Button loginButton;
+    private final OrderGUI orderGUI;
 
-    public LandingPage() {
+    public LandingPage(OrderGUI orderGUI) {
+
+        this.orderGUI = orderGUI;
 
         grid = new GridLayout(3, 3);
         Label loginLabel = new Label("Username:");
@@ -58,8 +62,9 @@ public class LandingPage extends CustomComponent implements View {
     }
 
     private void login() {
-        //todo
+        //todo : do actual logging in
         Notification.show("Logged in", "Welcome back " + loginField.getValue() + " !", Notification.Type.HUMANIZED_MESSAGE);
+        orderGUI.setLogOutVisible(loginField.getValue());
     }
 
     @Override

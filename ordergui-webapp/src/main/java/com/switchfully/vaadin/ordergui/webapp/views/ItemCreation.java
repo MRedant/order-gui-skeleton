@@ -9,6 +9,7 @@ import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -21,7 +22,7 @@ public class ItemCreation extends CustomComponent implements View {
 
     private TextField name = new TextField("Name");
     private TextField description = new TextField("Description");
-    private TextField price = new TextField("€ - Price");
+    private TextField price = new TextField("Price");
     private TextField amountOfStock = new TextField("Amount of stock");
     private Button createButton = new Button("Create");
     private Button cancelButton = new Button("Cancel");
@@ -51,6 +52,7 @@ public class ItemCreation extends CustomComponent implements View {
         price.setInputPrompt("0.00");
         price.setNullRepresentation("0.00");
         price.setRequired(true);
+        price.setIcon(FontAwesome.EUR);
         price.addValidator(new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
         amountOfStock.setRequired(true);
@@ -96,6 +98,5 @@ public class ItemCreation extends CustomComponent implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-
     }
 }
