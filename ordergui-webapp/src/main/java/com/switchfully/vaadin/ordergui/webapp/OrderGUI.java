@@ -54,7 +54,7 @@ public class OrderGUI extends UI {
         Navigator navigator = new Navigator(this, viewContainer);
         navigator.addView(VIEW_ITEMS_HOME, new LandingPage(this));
         navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource, this));
-        navigator.addView(VIEW_ITEMS_ITEMCREATION, new ItemCreation(itemResource));
+        navigator.addView(VIEW_ITEMS_ITEMCREATION, new ItemCreation(itemResource,this));
         navigator.addView(VIEW_ITEMS_ITEMUPDATE, new ItemUpdate(itemResource, this));
 
     }
@@ -117,5 +117,9 @@ public class OrderGUI extends UI {
 
     public String getVIEW_ITEMS_ITEMOVERVIEW() {
         return VIEW_ITEMS_ITEMOVERVIEW;
+    }
+
+    public String getVIEW_ITEMS_ITEMCREATION() {
+        return VIEW_ITEMS_ITEMCREATION;
     }
 }

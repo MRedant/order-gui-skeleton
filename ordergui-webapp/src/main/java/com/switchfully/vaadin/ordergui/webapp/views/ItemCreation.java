@@ -2,6 +2,7 @@ package com.switchfully.vaadin.ordergui.webapp.views;
 
 import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
+import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToFloatConverter;
@@ -18,10 +19,11 @@ import static com.vaadin.event.ShortcutAction.KeyCode;
 public class ItemCreation extends CustomComponent implements View {
 
 
+    private final OrderGUI orderGUI;
     private ItemResource itemResource;
 
     private TextField name = new TextField("Name");
-    private TextField description = new TextField("Description");
+    private TextArea description = new TextArea("Description");
     private TextField price = new TextField("Price");
     private TextField amountOfStock = new TextField("Amount of stock");
     private Button createButton = new Button("Create");
@@ -29,23 +31,26 @@ public class ItemCreation extends CustomComponent implements View {
     private Item item = new Item();
     final BeanFieldGroup<Item> binder = new BeanFieldGroup<>(Item.class);
 
-    public ItemCreation(ItemResource itemResource) {
+    public ItemCreation(ItemResource itemResource, OrderGUI orderGUI) {
+        this.orderGUI = orderGUI;
         this.itemResource = itemResource;
 
         BeanFieldGroup.bindFieldsUnbuffered(this.item,this);
 
         Label newItem = new Label("New item");
-        newItem.setStyleName(ValoTheme.LABEL_H1);
+        newItem.setStyleName(ValoTheme.LABEL_H2);
 
         name.setInputPrompt("The item name");
         name.setWidth("35em");
-        name.addValidator(new NullValidator("Can't be empty", false));
+        name.addValidator(
+                new NullValidator("Can't be empty", false));
         name.setRequired(true);
 
         description.setInputPrompt("The item description");
         description.setWidth("35em");
         description.setHeight("10em");
-        description.addValidator((new NullValidator("Can't be empty", false)));
+        description.addValidator((
+                new NullValidator("Can't be empty", false)));
         description.setRequired(true);
 
         price.setConverter(new StringToFloatConverter());
@@ -53,7 +58,8 @@ public class ItemCreation extends CustomComponent implements View {
         price.setNullRepresentation("0.00");
         price.setRequired(true);
         price.setIcon(FontAwesome.EUR);
-        price.addValidator(new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
+        price.addValidator(
+                new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
         amountOfStock.setRequired(true);
         amountOfStock.setValue("0");
@@ -64,14 +70,16 @@ public class ItemCreation extends CustomComponent implements View {
         createButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
         createButton.addClickListener(e -> save());
 
-        cancelButton.addClickListener(e -> clearAllFields());
+        cancelButton.addClickListener(e -> orderGUI
+                .getNavigator()
+                .navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW()));
 
         HorizontalLayout priceAmount = new HorizontalLayout(price, amountOfStock);
         priceAmount.setSpacing(true);
         HorizontalLayout buttons = new HorizontalLayout(createButton, cancelButton);
         buttons.setSpacing(true);
 
-        VerticalLayout viewContainer = new VerticalLayout(name, description, priceAmount, buttons);
+        VerticalLayout viewContainer = new VerticalLayout(newItem, name, description, priceAmount, buttons);
         viewContainer.setSpacing(true);
         clearAllFields();
         setCompositionRoot(viewContainer);
@@ -94,7 +102,6 @@ public class ItemCreation extends CustomComponent implements View {
         price.clear();
         amountOfStock.clear();
     }
-
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {

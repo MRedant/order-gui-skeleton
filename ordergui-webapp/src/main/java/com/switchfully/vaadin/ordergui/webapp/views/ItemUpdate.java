@@ -17,8 +17,9 @@ import com.vaadin.ui.themes.ValoTheme;
 public class ItemUpdate extends CustomComponent implements View {
 
     private OrderGUI orderGUI;
+    private Label updateItem = new Label();
     private TextField name = new TextField("Name");
-    private TextField description = new TextField("Description");
+    private TextArea description = new TextArea("Description");
     private TextField price = new TextField("(€) Price");
     private TextField amountOfStock = new TextField("Amount of stock");
     private Button updateButton = new Button("Update");
@@ -36,8 +37,7 @@ public class ItemUpdate extends CustomComponent implements View {
 
         BeanFieldGroup.bindFieldsUnbuffered(this.item, this);
 
-        Label newItem = new Label("Update item");
-        newItem.setStyleName(ValoTheme.LABEL_H1);
+        updateItem.setStyleName(ValoTheme.LABEL_H2);
 
         name.setInputPrompt("The item name");
         name.setWidth("35em");
@@ -69,14 +69,14 @@ public class ItemUpdate extends CustomComponent implements View {
         HorizontalLayout buttons = new HorizontalLayout(updateButton, cancelButton);
         buttons.setSpacing(true);
 
-        VerticalLayout viewContainer = new VerticalLayout(name, description, priceAmount, buttons);
+        VerticalLayout viewContainer = new VerticalLayout(updateItem, name, description, priceAmount, buttons);
         viewContainer.setSpacing(true);
 
         setCompositionRoot(viewContainer);
     }
 
     private void update() {
-        updateItem();
+        updateItemFields();
         try {
             binder.commit();
             itemResource.update(item);
@@ -88,11 +88,18 @@ public class ItemUpdate extends CustomComponent implements View {
         orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
     }
 
-    private void updateItem() {
+    private void updateItemFields() {
         item.setName(name.getValue());
         item.setDescription(description.getValue());
         item.setPrice(Float.valueOf(price.getValue()));
         item.setAmountOfStock(Integer.valueOf(amountOfStock.getValue()));
+    }
+
+    private void populateItemFields() {
+        name.setValue(item.getName());
+        description.setValue(item.getDescription());
+        price.setValue(String.valueOf(item.getPrice()));
+        amountOfStock.setValue(String.valueOf(item.getAmountOfStock()));
     }
 
     @Override
@@ -105,14 +112,8 @@ public class ItemUpdate extends CustomComponent implements View {
             item = itemResource.getItems().stream()
                     .filter(e -> e.getId().equals(itemId))
                     .findFirst().orElse(null);
+            updateItem.setValue("Update item "+ item.getId());
             populateItemFields();
         }
-    }
-
-    private void populateItemFields() {
-        name.setValue(item.getName());
-        description.setValue(item.getDescription());
-        price.setValue(String.valueOf(item.getPrice()));
-        amountOfStock.setValue(String.valueOf(item.getAmountOfStock()));
     }
 }
