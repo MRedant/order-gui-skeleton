@@ -7,7 +7,9 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.validator.FloatRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NullValidator;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -18,18 +20,19 @@ import static com.vaadin.event.ShortcutAction.KeyCode;
 
 public class ItemCreation extends CustomComponent implements View {
 
-
     private final OrderGUI orderGUI;
     private ItemResource itemResource;
+    private Item item = new Item();
+    final BeanFieldGroup<Item> binder = new BeanFieldGroup<>(Item.class);
 
     private TextField name = new TextField("Name");
     private TextArea description = new TextArea("Description");
     private TextField price = new TextField("Price");
     private TextField amountOfStock = new TextField("Amount of stock");
+    private Label newItem;
     private Button createButton = new Button("Create");
     private Button cancelButton = new Button("Cancel");
-    private Item item = new Item();
-    final BeanFieldGroup<Item> binder = new BeanFieldGroup<>(Item.class);
+
 
     public ItemCreation(ItemResource itemResource, OrderGUI orderGUI) {
         this.orderGUI = orderGUI;
@@ -37,11 +40,12 @@ public class ItemCreation extends CustomComponent implements View {
 
         BeanFieldGroup.bindFieldsUnbuffered(this.item,this);
 
-        Label newItem = new Label("New item");
+        newItem = new Label("New item");
         newItem.setStyleName(ValoTheme.LABEL_H2);
 
         name.setInputPrompt("The item name");
         name.setWidth("35em");
+        name.setCursorPosition(0);
         name.addValidator(
                 new NullValidator("Can't be empty", false));
         name.setRequired(true);
@@ -62,14 +66,18 @@ public class ItemCreation extends CustomComponent implements View {
                 new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
         amountOfStock.setRequired(true);
+        amountOfStock.setConverter(Integer.class);
         amountOfStock.setValue("0");
         amountOfStock.setInputPrompt("0");
         amountOfStock.setNullRepresentation("0");
+        amountOfStock.addValidator(
+                new IntegerRangeValidator("Please enter a correct number", 0, Integer.MAX_VALUE));
 
         createButton.setClickShortcut(KeyCode.ENTER);
         createButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
         createButton.addClickListener(e -> save());
 
+        cancelButton.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
         cancelButton.addClickListener(e -> orderGUI
                 .getNavigator()
                 .navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW()));
@@ -92,7 +100,8 @@ public class ItemCreation extends CustomComponent implements View {
         } catch (FieldGroup.CommitException e) {
             e.printStackTrace();
         }
-        Notification.show("- SAVED -", "The item was created successfully",Notification.Type.HUMANIZED_MESSAGE);
+        Notification.show(
+                "- SAVED -", "The item was created successfully",Notification.Type.HUMANIZED_MESSAGE);
         clearAllFields();
     }
 

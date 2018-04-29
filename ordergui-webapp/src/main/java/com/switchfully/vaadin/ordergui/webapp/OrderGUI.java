@@ -6,7 +6,6 @@ import com.switchfully.vaadin.ordergui.webapp.views.ItemUpdate;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemsOverview;
 import com.switchfully.vaadin.ordergui.webapp.views.LandingPage;
 import com.vaadin.annotations.Theme;
-import com.vaadin.event.ContextClickEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinRequest;
@@ -23,29 +22,29 @@ public class OrderGUI extends UI {
 
     public static final String PICTURES_PATH = "./ordergui-webapp/src/main/pictures/";
     private File orderThumb = new File(PICTURES_PATH + "order.png");
+    private File orderSplash = new File(PICTURES_PATH + "orderSplash.png");
 
     private String VIEW_ITEMS_HOME = "";
     private String VIEW_ITEMS_ITEMOVERVIEW = "itemOverview";
+
     private String VIEW_ITEMS_ITEMCREATION = "itemCreation";
     private String VIEW_ITEMS_ITEMUPDATE = "itemUpdate";
-
     private ItemResource itemResource;
     private HorizontalLayout menu;
+
     private HorizontalLayout viewContainer;
     private VerticalLayout mainLayout;
-
     private Button order;
     private Button logout;
+
     private MenuBar menubar;
     private MenuBar.MenuItem items;
     private MenuBar.MenuItem create;
     private MenuBar.MenuItem overview;
-
     @Autowired
     public OrderGUI(ItemResource itemResource) {
         this.itemResource = itemResource;
     }
-
     @Override
     protected void init(VaadinRequest request) {
 
@@ -83,9 +82,11 @@ public class OrderGUI extends UI {
         menubar.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
         items = menubar.addItem("items", null, null);
 
-        MenuBar.Command overviewCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW);
+        MenuBar.Command overviewCommand =
+                (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW);
         overview = items.addItem("Overview", null, overviewCommand);
-        MenuBar.Command createCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
+        MenuBar.Command createCommand =
+                (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
         create = items.addItem("Create", null, createCommand);
 
         logout = new Button();
@@ -102,8 +103,14 @@ public class OrderGUI extends UI {
 
     private void logMeout(String logoutButtonCaption) {
         //todo : do actual logging out
-        Notification.show("Logged Out", logoutButtonCaption + " successfully. \nThank you for using Örder !", Notification.Type.HUMANIZED_MESSAGE);
+        Notification.show(
+                "Logged Out"
+                , logoutButtonCaption + " successfully. \nThank you for using Örder !"
+                , Notification.Type.HUMANIZED_MESSAGE);
+
         logout.setVisible(false);
+
+        getNavigator().navigateTo(VIEW_ITEMS_HOME);
     }
 
     public void setLogOutVisible(String member){
@@ -121,5 +128,9 @@ public class OrderGUI extends UI {
 
     public String getVIEW_ITEMS_ITEMCREATION() {
         return VIEW_ITEMS_ITEMCREATION;
+    }
+
+    public File getOrderSplash() {
+        return orderSplash;
     }
 }
