@@ -12,18 +12,18 @@ public class ItemUpdate extends CustomComponent implements View {
 
     private Item item;
 
-    private ItemResource itemResource;
+//    private ItemResource itemResource;
 
-    @Autowired
-    public ItemUpdate(ItemResource itemResource) {
-        this.itemResource = itemResource;
+//    @Autowired
+    public ItemUpdate() {
+//        this.itemResource = itemResource;
 
-        setCompositionRoot(new Label("This is the item you clicked : \n"+item.getName()));
+//        setCompositionRoot(new Label("This is the item you clicked : \n"+item.getName()));
 
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-
+//        Item = event.getParameters()
     }
 }

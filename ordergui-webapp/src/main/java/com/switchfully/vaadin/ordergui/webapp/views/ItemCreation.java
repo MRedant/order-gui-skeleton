@@ -4,25 +4,21 @@ import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
-import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.vaadin.event.ShortcutAction.*;
+import static com.vaadin.event.ShortcutAction.KeyCode;
 
 public class ItemCreation extends CustomComponent implements View {
 
 
     private ItemResource itemResource;
 
-    private VerticalLayout viewContainer;
     private TextField name = new TextField("Name");
     private TextField description = new TextField("Description");
     private TextField price = new TextField("€ - Price");
@@ -32,7 +28,6 @@ public class ItemCreation extends CustomComponent implements View {
     private Item item = new Item();
     final BeanFieldGroup<Item> binder = new BeanFieldGroup<>(Item.class);
 
-    //    @Autowired
     public ItemCreation(ItemResource itemResource) {
         this.itemResource = itemResource;
 
@@ -74,7 +69,7 @@ public class ItemCreation extends CustomComponent implements View {
         HorizontalLayout buttons = new HorizontalLayout(createButton, cancelButton);
         buttons.setSpacing(true);
 
-        viewContainer = new VerticalLayout(name, description, priceAmount, buttons);
+        VerticalLayout viewContainer = new VerticalLayout(name, description, priceAmount, buttons);
         viewContainer.setSpacing(true);
         clearAllFields();
         setCompositionRoot(viewContainer);
@@ -87,7 +82,7 @@ public class ItemCreation extends CustomComponent implements View {
         } catch (FieldGroup.CommitException e) {
             e.printStackTrace();
         }
-        Notification.show("SAVED!", "The item was created succesfully",Notification.Type.HUMANIZED_MESSAGE);
+        Notification.show("SAVED!", "The item was created successfully",Notification.Type.HUMANIZED_MESSAGE);
         clearAllFields();
     }
 

@@ -4,18 +4,25 @@ import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemCreation;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemUpdate;
 import com.switchfully.vaadin.ordergui.webapp.views.ItemsOverview;
+import com.switchfully.vaadin.ordergui.webapp.views.LandingPage;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+
 @SpringUI
 @Theme("valo")
 public class OrderGUI extends UI {
+
+    public static final String PICTURES_PATH = "./ordergui-webapp/src/main/pictures/";
+    private File orderThumb = new File(PICTURES_PATH + "order.png");
 
     private String VIEW_ITEMS_HOME = "";
     private String VIEW_ITEMS_ITEMOVERVIEW = "itemOverview";
@@ -27,6 +34,12 @@ public class OrderGUI extends UI {
     private HorizontalLayout viewContainer;
     private VerticalLayout mainLayout;
 
+    private Button order;
+    private MenuBar menubar;
+    private MenuBar.MenuItem items;
+    private MenuBar.MenuItem create;
+    private MenuBar.MenuItem overview;
+
     @Autowired
     public OrderGUI(ItemResource itemResource) {
         this.itemResource = itemResource;
@@ -35,29 +48,18 @@ public class OrderGUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
 
-        Button order = new Button("Örder");
-        order.addStyleName(ValoTheme.MENU_TITLE);
-        order.setWidth("250px");
-        order.addClickListener(event -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW));
+        createPageLayout();
 
-        MenuBar menubar = new MenuBar();
-        MenuBar.MenuItem items = menubar.addItem("items",null,null);
-        items.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        Navigator navigator = new Navigator(this, viewContainer);
+        navigator.addView(VIEW_ITEMS_HOME, new LandingPage());
+        navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource, this));
+        navigator.addView(VIEW_ITEMS_ITEMCREATION, new ItemCreation(itemResource));
+        navigator.addView(VIEW_ITEMS_ITEMUPDATE, new ItemUpdate());
 
-        MenuBar.Command createCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
-        MenuBar.Command overviewCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW);
-        MenuBar.Command updateCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMUPDATE);
+    }
 
-
-        MenuBar.MenuItem create = items.addItem("Create", null, createCommand);
-        MenuBar.MenuItem overview = items.addItem("Overview", null, overviewCommand);
-        MenuBar.MenuItem update = items.addItem("Update", null, updateCommand);
-
-        menu = new HorizontalLayout(order,menubar);
-        menu.setExpandRatio(menubar, 1.0f);
-        menu.addStyleName(ValoTheme.MENU_ROOT);
-        menu.setWidth("100%");
-        menu.setSpacing(true);
+    private void createPageLayout() {
+        createMenuBar();
 
         viewContainer = new HorizontalLayout();
         viewContainer.setSizeFull();
@@ -67,13 +69,29 @@ public class OrderGUI extends UI {
         mainLayout.setSizeFull();
 
         setContent(mainLayout);
+    }
 
-        Navigator navigator = new Navigator(this, viewContainer);
-        navigator.addView(VIEW_ITEMS_HOME, new ItemsOverview(itemResource, this));
-        navigator.addView(VIEW_ITEMS_ITEMOVERVIEW, new ItemsOverview(itemResource, this));
-        navigator.addView(VIEW_ITEMS_ITEMCREATION,new ItemCreation(itemResource));
-//        navigator.addView(VIEW_ITEMS_ITEMUPDATE, ItemUpdate(item).class);
+    private void createMenuBar() {
+        order = new Button();
+        order.setIcon(new FileResource(orderThumb), "order icon");
+        order.addStyleName(ValoTheme.MENU_TITLE);
+        order.setWidth("250px");
+        order.addClickListener(event -> getNavigator().navigateTo(VIEW_ITEMS_HOME));
 
+        menubar = new MenuBar();
+        menubar.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        items = menubar.addItem("items", null, null);
+
+        MenuBar.Command overviewCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMOVERVIEW);
+        overview = items.addItem("Overview", null, overviewCommand);
+        MenuBar.Command createCommand = (MenuBar.Command) selectedItem -> getNavigator().navigateTo(VIEW_ITEMS_ITEMCREATION);
+        create = items.addItem("Create", null, createCommand);
+
+        menu = new HorizontalLayout(order, menubar);
+        menu.setExpandRatio(menubar, 1.0f);
+        menu.addStyleName(ValoTheme.MENU_ROOT);
+        menu.setWidth("100%");
+        menu.setSpacing(true);
     }
 
     public String getVIEW_ITEMS_ITEMUPDATE() {

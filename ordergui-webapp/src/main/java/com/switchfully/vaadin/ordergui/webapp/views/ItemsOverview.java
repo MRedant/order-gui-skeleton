@@ -6,10 +6,11 @@ import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer;
 
@@ -21,22 +22,20 @@ public class ItemsOverview extends CustomComponent implements View {
     private BeanItemContainer<Item> container;
     private Grid itemsGrid;
     private HorizontalLayout overviewLayout;
-    private Button editButton;
-   private OrderGUI orderGui;
+    private OrderGUI orderGui;
 
-    public ItemsOverview(ItemResource itemResource, OrderGUI orderGui ) {
-        editButton = new Button("edit");
+    public ItemsOverview(ItemResource itemResource, OrderGUI orderGui) {
         itemList = itemResource.getItems();
 
-        this.orderGui= orderGui;
+        this.orderGui = orderGui;
 
-        container = new BeanItemContainer<Item>(Item.class, itemList);
+        container = new BeanItemContainer<>(Item.class, itemList);
 
         GeneratedPropertyContainer editContainer = new GeneratedPropertyContainer(container);
         editContainer.addGeneratedProperty("edit", new PropertyValueGenerator<String>() {
             @Override
             public String getValue(com.vaadin.data.Item item, Object itemId, Object propertyId) {
-                return "edit";
+                return "Edit";
             }
 
             @Override
@@ -57,13 +56,10 @@ public class ItemsOverview extends CustomComponent implements View {
     }
 
     private void updateItem(Item item) {
-//        Notification.show("SAVED!", "item"+item.getId(),Notification.Type.HUMANIZED_MESSAGE);
-        orderGui.getNavigator().addView(orderGui.getVIEW_ITEMS_ITEMUPDATE(),new ItemUpdate(item));
         orderGui.getNavigator().navigateTo(orderGui.getVIEW_ITEMS_ITEMUPDATE());
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-
     }
 }
