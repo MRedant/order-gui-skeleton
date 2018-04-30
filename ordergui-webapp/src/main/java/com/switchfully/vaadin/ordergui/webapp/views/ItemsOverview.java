@@ -50,20 +50,16 @@ public class ItemsOverview extends CustomComponent implements View {
 //        container = new BeanItemContainer<>(Item.class, itemList);
 
         populateGrid();
-
-        overviewLayout = new VerticalLayout(buildSearchBar(), itemsGrid);
-        overviewLayout.setSpacing(true);
-        overviewLayout.setSizeFull();
-    }
-
-    private void populateGrid() {
-        refreshGrid();
         itemsGrid.setColumns("name", "description", "price", "amountOfStock", "edit");
         itemsGrid.sort("name", SortDirection.ASCENDING);
         itemsGrid.setContainerDataSource(editContainer);
         itemsGrid.setSizeFull();
         itemsGrid.getColumn("edit").setRenderer(
                 new ButtonRenderer((ClickableRenderer.RendererClickListener) event -> updateItem((Item) event.getItemId())));
+
+        overviewLayout = new VerticalLayout(buildSearchBar(), itemsGrid);
+        overviewLayout.setSpacing(true);
+        overviewLayout.setSizeFull();
     }
 
     private HorizontalLayout buildSearchBar() {
@@ -118,7 +114,7 @@ public class ItemsOverview extends CustomComponent implements View {
         };
     }
 
-    public void refreshGrid() {
+    public void populateGrid() {
         container = new BeanItemContainer<Item>(Item.class, itemResource.getItems());
         editContainer = new GeneratedPropertyContainer(container);
         editContainer.addGeneratedProperty("edit", editButtonGenerator());
@@ -127,6 +123,6 @@ public class ItemsOverview extends CustomComponent implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        refreshGrid();
+        populateGrid();
     }
 }
