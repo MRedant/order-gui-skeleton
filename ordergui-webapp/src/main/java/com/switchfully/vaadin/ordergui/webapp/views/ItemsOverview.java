@@ -84,8 +84,8 @@ public class ItemsOverview extends CustomComponent implements View {
                 .navigateTo(orderGui.getVIEW_ITEMS_ITEMCREATION()));
 
         searchBar = new HorizontalLayout(itemOverview, searchfieldAndButton, newItem);
-        searchBar.setComponentAlignment(searchfieldAndButton,Alignment.MIDDLE_CENTER);
-        searchBar.setComponentAlignment(newItem,Alignment.MIDDLE_RIGHT);
+        searchBar.setComponentAlignment(searchfieldAndButton, Alignment.MIDDLE_CENTER);
+        searchBar.setComponentAlignment(newItem, Alignment.MIDDLE_RIGHT);
         searchBar.setSpacing(true);
         searchBar.setSizeFull();
 
@@ -111,8 +111,12 @@ public class ItemsOverview extends CustomComponent implements View {
         };
     }
 
+    public void refreshGrid() {
+        itemsGrid.refreshAllRows();
+    }
+
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-
+        refreshGrid();
     }
 }

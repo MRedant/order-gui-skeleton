@@ -3,6 +3,7 @@ package com.switchfully.vaadin.ordergui.webapp.views;
 import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
+import com.switchfully.vaadin.ordergui.webapp.components.Converters;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToFloatConverter;
@@ -57,7 +58,7 @@ public class ItemCreation extends CustomComponent implements View {
                 new NullValidator("Can't be empty", false)));
         description.setRequired(true);
 
-        price.setConverter(new StringToFloatConverter());
+        price.setConverter(Converters.getFloatConverter());
         price.setInputPrompt("0.00");
         price.setNullRepresentation("0.00");
         price.setRequired(true);
@@ -66,7 +67,7 @@ public class ItemCreation extends CustomComponent implements View {
                 new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
         amountOfStock.setRequired(true);
-        amountOfStock.setConverter(Integer.class);
+        amountOfStock.setConverter(Converters.getIntegerConverter());
         amountOfStock.setValue("0");
         amountOfStock.setInputPrompt("0");
         amountOfStock.setNullRepresentation("0");

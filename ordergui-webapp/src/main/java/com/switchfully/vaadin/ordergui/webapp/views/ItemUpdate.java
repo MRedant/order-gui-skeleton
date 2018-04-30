@@ -3,6 +3,7 @@ package com.switchfully.vaadin.ordergui.webapp.views;
 import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
+import com.switchfully.vaadin.ordergui.webapp.components.Converters;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToFloatConverter;
@@ -15,6 +16,9 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class ItemUpdate extends CustomComponent implements View {
 
@@ -55,7 +59,7 @@ public class ItemUpdate extends CustomComponent implements View {
                 new NullValidator("Can't be empty", false)));
         description.setRequired(true);
 
-        price.setConverter(new StringToFloatConverter());
+        price.setConverter(Converters.getFloatConverter());
         price.setInputPrompt("0.00");
         price.setIcon(FontAwesome.EUR);
         price.setRequired(true);
@@ -63,7 +67,7 @@ public class ItemUpdate extends CustomComponent implements View {
                 new FloatRangeValidator("Price has to be above 0", 0.00f, Float.MAX_VALUE));
 
         amountOfStock.setRequired(true);
-        amountOfStock.setConverter(Integer.class);
+        amountOfStock.setConverter(Converters.getIntegerConverter());
         amountOfStock.setInputPrompt("0");
         amountOfStock.addValidator(
                 new IntegerRangeValidator("Please enter a correct number", 0, Integer.MAX_VALUE));
@@ -86,6 +90,8 @@ public class ItemUpdate extends CustomComponent implements View {
 
         setCompositionRoot(viewContainer);
     }
+
+
 
     private void update() {
         updateItemFields();
