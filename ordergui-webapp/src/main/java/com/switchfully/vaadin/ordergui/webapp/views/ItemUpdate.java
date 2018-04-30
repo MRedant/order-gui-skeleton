@@ -4,9 +4,9 @@ import com.switchfully.vaadin.ordergui.interfaces.items.Item;
 import com.switchfully.vaadin.ordergui.interfaces.items.ItemResource;
 import com.switchfully.vaadin.ordergui.webapp.OrderGUI;
 import com.switchfully.vaadin.ordergui.webapp.components.Converters;
+import com.vaadin.annotations.Push;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NullValidator;
@@ -16,9 +16,6 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class ItemUpdate extends CustomComponent implements View {
 
@@ -98,7 +95,7 @@ public class ItemUpdate extends CustomComponent implements View {
         try {
             binder.commit();
             itemResource.update(item);
-            orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
+//            orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
         } catch (FieldGroup.CommitException e) {
             e.printStackTrace();
         }
@@ -106,6 +103,7 @@ public class ItemUpdate extends CustomComponent implements View {
                 "- UPDATED -", "The item was successfully updated"
                 , Notification.Type.HUMANIZED_MESSAGE);
         orderGUI.getNavigator().navigateTo(orderGUI.getVIEW_ITEMS_ITEMOVERVIEW());
+
     }
 
     private void updateItemFields() {
