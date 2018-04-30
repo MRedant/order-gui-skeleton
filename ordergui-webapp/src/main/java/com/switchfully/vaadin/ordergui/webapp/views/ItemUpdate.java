@@ -16,6 +16,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public class ItemUpdate extends CustomComponent implements View {
 

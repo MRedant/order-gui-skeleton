@@ -16,9 +16,9 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import static com.vaadin.event.ShortcutAction.KeyCode;
-
 public class ItemCreation extends CustomComponent implements View {
 
     private final OrderGUI orderGUI;

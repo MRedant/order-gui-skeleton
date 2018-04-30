@@ -16,9 +16,9 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Collection;
-
 public class ItemsOverview extends CustomComponent implements View {
 
     private OrderGUI orderGui;

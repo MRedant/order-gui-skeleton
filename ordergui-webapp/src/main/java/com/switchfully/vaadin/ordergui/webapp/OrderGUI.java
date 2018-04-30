@@ -13,9 +13,9 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.File;
-
 @SpringUI
 @Theme("valo")
 public class OrderGUI extends UI {
